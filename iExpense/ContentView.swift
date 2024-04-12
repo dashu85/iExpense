@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
+import Observation
 
-@Observable // added so swift can observe if the instance of a class changes, @state doesn't check for that https://www.hackingwithswift.com/books/ios-swiftui/using-state-with-classes
+@Observable // added so swift can observe if the instance of a class changes, @state doesn't check for that https://www.hackingwithswift.com/books/ios-swiftui/using-state-with-classes and https://www.hackingwithswift.com/books/ios-swiftui/sharing-swiftui-state-with-observable. For classes @State is just there to keep the object alive.
 class User {
     var firstName = "Marco"
     var lastName = "Reus"
