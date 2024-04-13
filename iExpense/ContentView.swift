@@ -33,26 +33,56 @@ struct ContentView: View {
     
     @State private var showingSheet = false
     
+    @State private var numbers = [Int]()
+    @State private var currentNumber = 1
+    
+    
     var body: some View {
-        VStack {
-            Text("Your name is \(user.firstName) \(user.lastName).")
+        NavigationStack {
             
-            TextField("First name:", text: $user.firstName)
-                .padding(10)
-                .background(.green)
-            TextField("Last name:", text: $user.lastName)
-                .padding(10)
-                .background(.gray)
+            VStack {
+                List {
+                    ForEach(numbers, id: \.self) {
+                        Text("Row \($0)")
+                    }
+                    .onDelete(perform: { indexSet in
+                        removeRows(at: indexSet)
+                    })
+                }
+                
+                Button("Add Number") {
+                    numbers.append(currentNumber)
+                    currentNumber += 1
+                }
+            }
+            .toolbar {
+                EditButton()
+            }
+            
+            VStack {
+                Text("Your name is \(user.firstName) \(user.lastName).")
+                
+                TextField("First name:", text: $user.firstName)
+                    .padding(10)
+                    .background(.green)
+                TextField("Last name:", text: $user.lastName)
+                    .padding(10)
+                    .background(.gray)
+            }
+            .padding()
+            .background(.yellow)
+            
+            Button("Show Sheet") {
+                showingSheet.toggle()
+            }
+            .sheet(isPresented: $showingSheet) {
+                secondView(name: user.firstName)
+            }
         }
-        .padding()
-        .background(.yellow)
-        
-        Button("Show Sheet") {
-            showingSheet.toggle()
-        }
-        .sheet(isPresented: $showingSheet) {
-            secondView(name: user.firstName)
-        }
+    }
+    
+    func removeRows(at offset: IndexSet) {
+        numbers.remove(atOffsets: offset)
     }
 }
 
