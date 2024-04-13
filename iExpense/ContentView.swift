@@ -14,8 +14,24 @@ class User {
     var lastName = "Reus"
 }
 
+struct secondView: View {
+    var name: String
+    
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        Text("Hello \(name)")
+        
+        Button("Dismiss") {
+            dismiss()
+        }
+    }
+}
+
 struct ContentView: View {
     @State private var user = User()
+    
+    @State private var showingSheet = false
     
     var body: some View {
         VStack {
@@ -30,6 +46,13 @@ struct ContentView: View {
         }
         .padding()
         .background(.yellow)
+        
+        Button("Show Sheet") {
+            showingSheet.toggle()
+        }
+        .sheet(isPresented: $showingSheet) {
+            secondView(name: user.firstName)
+        }
     }
 }
 
