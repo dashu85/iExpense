@@ -230,31 +230,45 @@ struct ContentView: View {
             case "7. iExpense" :
                 NavigationStack {
                     List {
-                        ForEach(expenses.items) { item in // id: \.id can be left of since ExpenseItem conforms to Identifiable
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(item.name)
-                                        .font(.headline)
-                                    Text(item.type)
-                                }
-                                
-                                Spacer()
-                                
-                                switch item.amount {
-                                    
-                                case _ where item.amount < 10 :
-                                    Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                                        .foregroundStyle(.green)
-                                case _ where item.amount < 100 :
-                                    Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                                        .foregroundColor(.orange)
-                                default:
-                                    Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                                        .foregroundColor(.red)
+                        Section {
+                            ForEach(expenses.items) { item in // id: \.id can be left of since ExpenseItem conforms to Identifiable
+                                if item.type == "Personal" {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(item.name)
+                                                .font(.headline)
+                                            Text(item.type)
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                                            .foregroundStyle(colorAmount(item: item))
+                                    }
                                 }
                             }
+                            .onDelete(perform: removeItems)
                         }
-                        .onDelete(perform: removeItems)
+                        
+                        Section {
+                            ForEach(expenses.items) { item in // id: \.id can be left of since ExpenseItem conforms to Identifiable
+                                if item.type == "Business" {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(item.name)
+                                                .font(.headline)
+                                            Text(item.type)
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                                            .foregroundStyle(colorAmount(item: item))
+                                    }
+                                }
+                            }
+                            .onDelete(perform: removeItems)
+                        }
                     }
                     .navigationTitle("iExpense")
                     .toolbar {
@@ -265,7 +279,6 @@ struct ContentView: View {
                     .sheet(isPresented: $showingAddExpense) {
                         AddView(expenses: expenses)
                     }
-                    
                 }
              
             default:
@@ -281,6 +294,18 @@ struct ContentView: View {
     
     func removeItems(at offset: IndexSet) {
         expenses.items.remove(atOffsets: offset)
+    }
+    
+    func colorAmount(item: ExpenseItem) -> Color {
+        switch item.amount {
+            
+        case _ where item.amount < 10 :
+                .green
+        case _ where item.amount < 100 :
+                .orange
+        default:
+            .red
+        }
     }
 }
 
