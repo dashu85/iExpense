@@ -38,10 +38,26 @@ struct UserCodable: Codable {
     var lastName: String
 }
 
-// App
+// App iExpense ----------------------------------------
 @Observable
 class Expenses {
-    var items = [ExpenseItem]()
+    var items = [ExpenseItem]() {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(items) {
+                UserDefaults.standard.set(encoded, forKey: "Items")
+            }
+        }
+    }
+        
+    init() {
+        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
+            if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {
+                items = decodedItems
+                return
+            }
+        }
+        items = []
+    }
 }
 
 
@@ -64,8 +80,10 @@ struct ContentView: View {
     
     @State private var userCodable = UserCodable(firstName: "Taylor", lastName: "Swift")
     
-    // App iExpense
+    // App iExpense -------------------------------------
     @State private var expenses = Expenses() // empty array from Expenses class
+    
+    @State private var showingAddExpense = false
     
     var body: some View {
         NavigationStack {
@@ -213,17 +231,41 @@ struct ContentView: View {
                 NavigationStack {
                     List {
                         ForEach(expenses.items) { item in // id: \.id can be left of since ExpenseItem conforms to Identifiable
-                           Text(item.name)
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(item.name)
+                                        .font(.headline)
+                                    Text(item.type)
+                                }
+                                
+                                Spacer()
+                                
+                                switch item.amount {
+                                    
+                                case _ where item.amount < 10 :
+                                    Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                                        .foregroundStyle(.green)
+                                case _ where item.amount < 100 :
+                                    Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                                        .foregroundColor(.orange)
+                                default:
+                                    Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                                        .foregroundColor(.red)
+                                }
+                            }
                         }
                         .onDelete(perform: removeItems)
                     }
                     .navigationTitle("iExpense")
                     .toolbar {
                         Button("Add expense", systemImage: "plus") {
-                            let expense = ExpenseItem(name: "Laptop", type: "Personal", amount: 2000)
-                            expenses.items.append(expense)
+                            showingAddExpense = true
                         }
                     }
+                    .sheet(isPresented: $showingAddExpense) {
+                        AddView(expenses: expenses)
+                    }
+                    
                 }
              
             default:
