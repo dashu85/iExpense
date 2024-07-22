@@ -5,6 +5,7 @@
 //  Created by Marcus Benoit on 12.04.24.
 //
 
+import SwiftData
 import SwiftUI
 import Observation
 // Preparation examples
@@ -39,26 +40,26 @@ struct UserCodable: Codable {
 }
 
 // App iExpense ----------------------------------------
-@Observable
-class Expenses {
-    var items = [ExpenseItem]() {
-        didSet {
-            if let encoded = try? JSONEncoder().encode(items) {
-                UserDefaults.standard.set(encoded, forKey: "Items")
-            }
-        }
-    }
-        
-    init() {
-        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
-            if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {
-                items = decodedItems
-                return
-            }
-        }
-        items = []
-    }
-}
+//@Observable
+//class Expenses {
+//    var items = [ExpenseItem]() {
+//        didSet {
+//            if let encoded = try? JSONEncoder().encode(items) {
+//                UserDefaults.standard.set(encoded, forKey: "Items")
+//            }
+//        }
+//    }
+//
+//    init() {
+//        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
+//            if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {
+//                items = decodedItems
+//                return
+//            }
+//        }
+//        items = []
+//    }
+//}
 
 
 struct ContentView: View {
@@ -81,9 +82,22 @@ struct ContentView: View {
     @State private var userCodable = UserCodable(firstName: "Taylor", lastName: "Swift")
     
     // App iExpense -------------------------------------
-    @State private var expenses = Expenses() // empty array from Expenses class
+    //@State private var expenses = Expenses() // empty array from Expenses class
+    
+    // Challenge 1 - Project 12
+    @Environment(\.modelContext) var modelContext
+    @State private var filterBy = ""
+    @State private var showBoth = true
+    @State private var sortOrder = [
+        SortDescriptor(\ExpenseItem.name),
+        SortDescriptor(\ExpenseItem.amount)
+    ]
+    @State private var path = [ExpenseItem]()
     
     @State private var showingAddExpense = false
+    
+    // Project 9 - challenge 1
+    @State private var navPath = NavigationPath()
     
     var body: some View {
         NavigationStack {
@@ -180,7 +194,7 @@ struct ContentView: View {
                     }
                 }
             case "5. Storing settings using AppStorage" :
-            
+                
                 VStack {
                     Button("Tap count App Storage: \(tapCountAppStorage)") {
                         tapCountAppStorage += 1
@@ -223,68 +237,75 @@ struct ContentView: View {
                     That accesses UserDefaults directly rather than going through @AppStorage, because the @AppStorage property wrapper just doesn’t work here.
                      
                     That data constant is a new data type called, perhaps confusingly, Data. It’s designed to store any kind of data you can think of, such as strings, images, zip files, and more. Here, though, all we care about is that it’s one of the types of data we can write straight into UserDefaults.
-
+                    
                     When we’re coming back the other way – when we have JSON data and we want to convert it to Swift Codable types – we should use JSONDecoder rather than JSONEncoder(), but the process is much the same.
                     """)
-            
+                
             case "7. iExpense" :
-                NavigationStack {
-                    List {
-                        Section {
-                            ForEach(expenses.items) { item in // id: \.id can be left of since ExpenseItem conforms to Identifiable
-                                if item.type == "Personal" {
-                                    HStack {
-                                        VStack(alignment: .leading) {
-                                            Text(item.name)
-                                                .font(.headline)
-                                            Text(item.type)
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                                            .foregroundStyle(colorAmount(item: item))
-                                    }
+                NavigationStack(path: $path) {
+                    FilteredView(showFilter: filterBy, showBoth: showBoth, sortOrder: sortOrder)
+                    
+                    
+                    //                        Section {
+                    //                            ForEach(expenses) { item in // id: \.id can be left of since ExpenseItem conforms to Identifiable
+                    //                                if item.type == "Personal" {
+                    //                                    NavigationLink(value: item) {
+                    //                                        HStack {
+                    //                                            VStack(alignment: .leading) {
+                    //                                                Text(item.name)
+                    //                                                    .font(.headline)
+                    //                                                Text(item.type)
+                    //                                            }
+                    //
+                    //                                            Spacer()
+                    //
+                    //                                            Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                    //                                                .foregroundStyle(colorAmount(item: item))
+                    //                                        }
+                    //                                    }
+                    //                                }
+                    //                            }
+                    //                            //.onDelete(perform: removeItems)
+                    //                        }
+                    
+                        .navigationTitle("iExpense")
+                        .navigationDestination(for: ExpenseItem.self) { item in
+                            EditItemView(expense: item)
+                        }
+                        .toolbar {
+                            Button("Add expense", systemImage: "plus") {
+                                showingAddExpense = true
+                            }
+                            
+                            // Challenge 3 
+                            Menu("Filter", systemImage: "equal.square") {
+                                
+                                Button("Show Both") {
+                                    showBoth = true
+                                }
+                                
+                                Button("Show Personal") {
+                                    showBoth = false
+                                    filterBy = "Personal"
+                                }
+                                
+                                Button("Show Business") {
+                                    showBoth = false
+                                    filterBy = "Business"
                                 }
                             }
-                            .onDelete(perform: removeItems)
                         }
-                        
-                        Section {
-                            ForEach(expenses.items) { item in // id: \.id can be left of since ExpenseItem conforms to Identifiable
-                                if item.type == "Business" {
-                                    HStack {
-                                        VStack(alignment: .leading) {
-                                            Text(item.name)
-                                                .font(.headline)
-                                            Text(item.type)
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                                            .foregroundStyle(colorAmount(item: item))
-                                    }
-                                }
-                            }
-                            .onDelete(perform: removeItems)
+                        .sheet(isPresented: $showingAddExpense) {
+                            AddView()
                         }
-                    }
-                    .navigationTitle("iExpense")
-                    .toolbar {
-                        Button("Add expense", systemImage: "plus") {
-                            showingAddExpense = true
-                        }
-                    }
-                    .sheet(isPresented: $showingAddExpense) {
-                        AddView(expenses: expenses)
-                    }
                 }
-             
+                
             default:
                 Text("something went wrong")
             }
+            
             Spacer()
+            
         }
     }
     
@@ -292,21 +313,9 @@ struct ContentView: View {
         numbers.remove(atOffsets: offset)
     }
     
-    func removeItems(at offset: IndexSet) {
-        expenses.items.remove(atOffsets: offset)
-    }
-    
-    func colorAmount(item: ExpenseItem) -> Color {
-        switch item.amount {
-            
-        case _ where item.amount < 10 :
-                .green
-        case _ where item.amount < 100 :
-                .orange
-        default:
-            .red
-        }
-    }
+    //    func removeItems(at offset: IndexSet) {
+    //        expenses.remove(atOffsets: offset)
+    //    }
 }
 
 #Preview {

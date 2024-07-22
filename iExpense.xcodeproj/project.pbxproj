@@ -7,15 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2950C5EF2C0A41F6002C5042 /* EditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2950C5EE2C0A41F6002C5042 /* EditItemView.swift */; };
 		29A2E73E2BC977EB007580AF /* iExpenseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A2E73D2BC977EB007580AF /* iExpenseApp.swift */; };
 		29A2E7402BC977EB007580AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A2E73F2BC977EB007580AF /* ContentView.swift */; };
 		29A2E7422BC977EC007580AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29A2E7412BC977EC007580AF /* Assets.xcassets */; };
 		29A2E7462BC977EC007580AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29A2E7452BC977EC007580AF /* Preview Assets.xcassets */; };
 		29A2E74F2BCE5EA8007580AF /* ExpenseItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A2E74E2BCE5EA8007580AF /* ExpenseItem.swift */; };
 		29A2E7512BCECC44007580AF /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A2E7502BCECC44007580AF /* AddView.swift */; };
+		29BCD6452C0DDB47000CA17D /* FilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BCD6442C0DDB47000CA17D /* FilteredView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2950C5EE2C0A41F6002C5042 /* EditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemView.swift; sourceTree = "<group>"; };
 		29A2E73A2BC977EB007580AF /* iExpense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iExpense.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A2E73D2BC977EB007580AF /* iExpenseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iExpenseApp.swift; sourceTree = "<group>"; };
 		29A2E73F2BC977EB007580AF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -24,6 +27,7 @@
 		29A2E7452BC977EC007580AF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		29A2E74E2BCE5EA8007580AF /* ExpenseItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseItem.swift; sourceTree = "<group>"; };
 		29A2E7502BCECC44007580AF /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
+		29BCD6442C0DDB47000CA17D /* FilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteredView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +62,8 @@
 			children = (
 				29A2E73D2BC977EB007580AF /* iExpenseApp.swift */,
 				29A2E73F2BC977EB007580AF /* ContentView.swift */,
+				29BCD6442C0DDB47000CA17D /* FilteredView.swift */,
+				2950C5EE2C0A41F6002C5042 /* EditItemView.swift */,
 				29A2E7502BCECC44007580AF /* AddView.swift */,
 				29A2E74E2BCE5EA8007580AF /* ExpenseItem.swift */,
 				29A2E7412BC977EC007580AF /* Assets.xcassets */,
@@ -103,7 +109,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1530;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					29A2E7392BC977EB007580AF = {
 						CreatedOnToolsVersion = 15.3;
@@ -147,6 +153,8 @@
 			files = (
 				29A2E7512BCECC44007580AF /* AddView.swift in Sources */,
 				29A2E7402BC977EB007580AF /* ContentView.swift in Sources */,
+				2950C5EF2C0A41F6002C5042 /* EditItemView.swift in Sources */,
+				29BCD6452C0DDB47000CA17D /* FilteredView.swift in Sources */,
 				29A2E74F2BCE5EA8007580AF /* ExpenseItem.swift in Sources */,
 				29A2E73E2BC977EB007580AF /* iExpenseApp.swift in Sources */,
 			);
@@ -189,6 +197,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -250,6 +259,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -277,6 +287,7 @@
 				CODE_SIGN_ENTITLEMENTS = iExpense/iExpense.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"iExpense/Preview Content\"";
 				DEVELOPMENT_TEAM = 8L4B7AD85F;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -315,6 +326,7 @@
 				CODE_SIGN_ENTITLEMENTS = iExpense/iExpense.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"iExpense/Preview Content\"";
 				DEVELOPMENT_TEAM = 8L4B7AD85F;
 				ENABLE_HARDENED_RUNTIME = YES;
